@@ -1,6 +1,6 @@
 FROM alpine:3.14.0
 WORKDIR /app
-RUN apk add --no-cache bash ncurses git
+RUN apk add --no-cache bash ncurses git curl nano
 COPY /level02/goal /app
 COPY /level02/task /app
 ADD /verify /usr/bin
