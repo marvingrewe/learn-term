@@ -1,2 +1,9 @@
 #!/bin/bash
-sh /app/goals/goal01 .
+#sh /app/goal .
+#retval=$(/app/goal .)
+if (/app/goal .)
+then
+  curl -d @/etc/hostname host.docker.internal:8080/verify
+else
+  echo "Das Level ist leider noch nicht gelöst!"
+fi
