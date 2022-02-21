@@ -1,0 +1,7 @@
+#!/bin/bash
+commitCount=$(git log --oneline | wc -l)
+if [ "$commitCount" -ge 1 ]; then
+  echo "Level 01 bestanden!"
+else
+  echo "Level 01 (noch) nicht bestanden!"
+fi;

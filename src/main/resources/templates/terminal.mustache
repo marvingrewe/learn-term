@@ -1,0 +1,23 @@
+{{> header}}
+
+<div id="terminal"></div>
+<script>
+    const term = new Terminal({
+        screenKeys: true,
+        useStyle: true,
+        cursorBlink: true,
+        fullscreenWin: true,
+        maximizeWin: true,
+        screenReaderMode: true,
+        cols: 128,
+    });
+    const socket = new WebSocket('wss://127.0.0.1/v1.41/containers/elegant_carson/attach/ws');
+    console.log(socket)
+    const attachAddon = new AttachAddon(socket);
+    //
+    term.loadAddon(attachAddon)
+    term.open(document.getElementById('terminal'));
+    term.write('Hello from {{term}}')
+</script>
+
+{{> footer}}

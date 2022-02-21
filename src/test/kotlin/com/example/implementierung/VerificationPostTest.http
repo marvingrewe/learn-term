@@ -1,0 +1,6 @@
+POST http://localhost:8080/postbody
+Content-Type: application/x-www-form-urlencoded
+
+hostname=cc1e89a945b6
+
+###
