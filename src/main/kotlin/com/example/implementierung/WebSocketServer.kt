@@ -24,7 +24,7 @@ class WebSocketServerConfiguration(@Autowired private val wsHandler: MyWebSocket
     override fun registerWebSocketHandlers(registry: WebSocketHandlerRegistry) {
         registry
             .addHandler(wsHandler, "/terminal")
-            .addInterceptors(MyHandShakeInterceptor())
+            // .addInterceptors(MyHandShakeInterceptor())
     }
 
 }
@@ -58,7 +58,7 @@ class MyWebSocketHandler : TextWebSocketHandler() {
         toContainer = PipedOutputStream()
         val currentSession = session to toContainer
         session.attributes["pipe"] = toContainer
-        println(session.attributes.keys)
+        // println(session.attributes.keys)
         attachToContainer(containerMap[session.principal?.name]!!, session)
     }
 
@@ -72,7 +72,7 @@ class MyWebSocketHandler : TextWebSocketHandler() {
     }
 }
 
-
+/*
 class MyHandShakeInterceptor : HandshakeInterceptor {
     override fun beforeHandshake(
         request: ServerHttpRequest,
@@ -94,3 +94,4 @@ class MyHandShakeInterceptor : HandshakeInterceptor {
     }
 
 }
+ */

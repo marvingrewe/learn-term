@@ -30,7 +30,7 @@ val httpClient: DockerHttpClient = ApacheDockerHttpClient.Builder()
 
 val dockerClient: DockerClient = DockerClientImpl.getInstance(config, httpClient)
 
-fun createContainer(image: String, name: String) {
+fun createContainer(image: String, name: String): String {
     val result = dockerClient.createContainerCmd(image)
         .withName(name)
         .withTty(true)
@@ -42,6 +42,7 @@ fun createContainer(image: String, name: String) {
         .exec()
     dockerClient.startContainerCmd(name).exec()
     println(result)
+    return result.id.take(12)
 }
 
 fun attachToContainer(id: String, currentSession: WebSocketSession) {

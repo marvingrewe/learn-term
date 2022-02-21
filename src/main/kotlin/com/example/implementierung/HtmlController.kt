@@ -13,13 +13,10 @@ import org.springframework.ui.set
 import org.springframework.web.bind.annotation.*
 import java.security.Principal
 import java.time.Duration
-import javax.servlet.http.HttpServlet
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpSession
 
 
 @Controller
-class HtmlController(val userRepository: UserRepository) {
+class HtmlController(val dbManager: DBManager) {
 
     @GetMapping("/")
     fun default(): String {
@@ -33,25 +30,33 @@ class HtmlController(val userRepository: UserRepository) {
         return "levels"
     }
 
-    @GetMapping("/levels/{levelID}")
-    fun blog(model: Model, authentication: Authentication, @PathVariable levelID: String): String {
+    @GetMapping("/levels/{levelName}")
+    fun blog(model: Model, authentication: Authentication, @PathVariable levelName: String): String {
         check(authentication is OAuth2AuthenticationToken) { "authentication is not OAuth2AuthenticationToken" }
         val attributes = authentication.principal.attributes
         println("authentication name: ${authentication.name}")
         println(authentication)
         println("authentication principal: ${authentication.principal::class.java}")
-        model["title"] = "test"
+        model["title"] = levelName
+        val userName = attributes["name"].toString()
+        model["user"] = userName
 
-        model["user"] = attributes["name"] ?: "unknown user"
+        val accountName = attributes["login"].toString()
 
-        val containerName = levelID + attributes["login"]
+        val containerName = levelName + attributes["login"]
         containerMap[authentication.name] = containerName
         println(levels)
         // TODO: user management
-        // userRepository.save(User(attributes["name"] as String, attributes["email"] as String, attributes["login"] as String))
+        //
 
         // TODO: validate levelID
-        createContainer(levelID, containerName)
+        val containerID = createContainer(levelName, containerName)
+        var user = dbManager.getUserByAccountName(accountName)
+        if (user == null) {
+            user = dbManager.createUser(attributes["name"] as String, attributes["email"] as String, attributes["login"] as String)
+        }
+        val level = dbManager.getLevelByName(levelName)
+        containerIDMap[containerID] = user to level
 
         return "blog"
     }
