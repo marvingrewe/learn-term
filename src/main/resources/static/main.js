@@ -16,8 +16,8 @@
     const url = protocol + location.host + "/terminal";
     const socket = new WebSocket(url);
     const attachAddon = new AttachAddon.AttachAddon(socket);
-    const fitAddon = new FitAddon.FitAddon();
-    term.loadAddon(fitAddon);
+    // const fitAddon = new FitAddon.FitAddon();
+    // term.loadAddon(fitAddon);
     socket.onclose = function (event) {
         console.log(event);
         term.write('\r\n\nconnection has been terminated\n')
@@ -27,10 +27,10 @@
         term.loadAddon(attachAddon);
         term._initialized = true;
         term.focus();
-        setTimeout(function () {fitAddon.fit()});
-        window.onresize = function () {
-            fitAddon.fit();
-        }
-        term.write('Hello from \x1B[1;3;31mxterm.js\x1B[0m $ ')
+        // setTimeout(function () {fitAddon.fit()});
+        // window.onresize = function () {
+        //     fitAddon.fit();
+        // }
+        term.write('bash-5.1$ ')
     };
 })();

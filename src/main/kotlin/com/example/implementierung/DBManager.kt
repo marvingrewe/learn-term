@@ -10,28 +10,7 @@ lateinit var levels : List<Level>
 @Controller
 class DBManager(val userRepository: UserRepository, val levelRepository: LevelRepository) {
 
-    @RequestMapping("/verifytest")
-    @ResponseBody
-    fun verifyTest(session: Session): String? {
-        println(session.toString())
-        println(session::class.java)
-        println("I'm verifying!")
-        return "this page is for testing purposes only\n"
-    }
 
-    @PostMapping("/verify")
-    @ResponseBody
-    fun verify(@RequestBody hostName: String): String? {
-        val containerID = if (hostName.last() == '=') {
-            hostName.dropLast(1)
-        } else {
-            hostName
-        }
-        // println(containerID)
-        val (user, level) = containerIDMap[containerID]!!
-        markCompletedLevel(user, level)
-        return "verified container $containerID\n"
-    }
 
     @Transactional
     fun markCompletedLevel(user: User, level: Level) {
@@ -50,6 +29,10 @@ class DBManager(val userRepository: UserRepository, val levelRepository: LevelRe
         val user = User(name, email, login)
         userRepository.save(user)
         return user
+    }
+
+    fun getAllLevels(): List<Level> {
+        return levelRepository.findAll()
     }
 
     fun getLevelByName(name: String): Level {

@@ -5,6 +5,7 @@ import com.github.dockerjava.core.DockerClientConfig
 import com.github.dockerjava.core.DockerClientImpl
 import com.github.dockerjava.httpclient5.ApacheDockerHttpClient
 import com.github.dockerjava.transport.DockerHttpClient
+import org.springframework.boot.web.servlet.server.Session
 import org.springframework.security.core.Authentication
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken
 import org.springframework.stereotype.Controller
@@ -25,7 +26,7 @@ class HtmlController(val dbManager: DBManager) {
 
     @GetMapping("/levels")
     fun getLevels(model: Model): String {
-        val levelMap = levels.associate { it.levelID.toString() to it.name }
+        val levelMap = dbManager.getAllLevels().associate { it.levelID.toString() to it.name }
         model.addAttribute("levels", levelMap)
         return "levels"
     }
@@ -61,97 +62,120 @@ class HtmlController(val dbManager: DBManager) {
         return "blog"
     }
 
+    @PostMapping("/verify")
+    @ResponseBody
+    fun verify(@RequestBody hostName: String): String? {
+        val containerID = if (hostName.last() == '=') {
+            hostName.dropLast(1)
+        } else {
+            hostName
+        }
+        // println(containerID)
+        val (user, level) = containerIDMap[containerID]!!
+        dbManager.markCompletedLevel(user, level)
+        return "verified container $containerID\n"
+    }
+
+    @RequestMapping("/verifytest")
+    @ResponseBody
+    fun verifyTest(session: Session): String? {
+        println(session.toString())
+        println(session::class.java)
+        println("I'm verifying!")
+        return "this page is for testing purposes only\n"
+    }
+
     @RequestMapping(value = ["/username"], method = [RequestMethod.GET])
     @ResponseBody
     fun currentUserName(principal: Principal): String? {
         return principal.name
     }
 
-    @GetMapping("/secret")
-    fun secret() {
-        createSecret()
-    }
-
-    @GetMapping("/container")
-    fun container(model: Model) {
-        createContainer("mvp", "hallihallo")
-    }
-
-    @GetMapping("/attach")
-    fun attach(model: Model) {
-        // attachToContainer("hallihallo", ByteArrayInputStream(ByteArray(1048576)))
-    }
-
-    @GetMapping("/changes")
-    @ResponseBody
-    fun changes(model: Model): String {
-        return containerDiff("hallihallo")
-    }
-
-    @GetMapping("/archive")
-    @ResponseBody
-    fun archive(model: Model): String {
-        return containerArchive("hallihallo")
-    }
-
-    @GetMapping("/test")
-    @ResponseBody()
-    fun terminal(model: Model): String {
-
-        val config: DockerClientConfig = DefaultDockerClientConfig.createDefaultConfigBuilder()
-            .withApiVersion("1.41")
-            .build()
-
-        println(config.dockerHost.toString())
-
-        val httpClient: DockerHttpClient = ApacheDockerHttpClient.Builder()
-            .dockerHost(config.dockerHost)
-            .sslConfig(config.sslConfig)
-            .maxConnections(100)
-            .connectionTimeout(Duration.ofSeconds(30))
-            .responseTimeout(Duration.ofSeconds(45))
-            .build()
-
-        println(httpClient.toString())
-
-        val dockerClient = DockerClientImpl.getInstance(config, httpClient)
-
-        val containers = dockerClient.listContainersCmd()
-            .withStatusFilter(mutableListOf("running")).exec().firstOrNull()?.id
-        println(containers)
-
-
-        val result = html {
-            head {
-                title { +"xTerm + Docker test" }
-            }
-            body {
-                h1 { +"xTerm + Docker test" }
-                p {
-                    +"Dies ist eine Testumgebung"
-                }
-
-                a(href = "http://kotlinlang.org") { +"Kotlin" }
-
-                // mixed content
-                p {
-                    +"This is some"
-                    b { +"mixed" }
-                    +"text. For more see the"
-                    a(href = "http://kotlinlang.org") {
-                        +"Kotlin"
-                    }
-                    +"project"
-                }
-                p {
-                    ul {
-                        for (i in 1..5)
-                            li { +"${i}*2 = ${i * 2}" }
-                    }
-                }
-            }
-        }
-
-        return result.toString()
-    }
+    // @GetMapping("/secret")
+    // fun secret() {
+    //     createSecret()
+    // }
+    //
+    // @GetMapping("/container")
+    // fun container(model: Model) {
+    //     createContainer("mvp", "hallihallo")
+    // }
+    //
+    // @GetMapping("/attach")
+    // fun attach(model: Model) {
+    //     // attachToContainer("hallihallo", ByteArrayInputStream(ByteArray(1048576)))
+    // }
+    //
+    // @GetMapping("/changes")
+    // @ResponseBody
+    // fun changes(model: Model): String {
+    //     return containerDiff("hallihallo")
+    // }
+    //
+    // @GetMapping("/archive")
+    // @ResponseBody
+    // fun archive(model: Model): String {
+    //     return containerArchive("hallihallo")
+    // }
+    //
+    // @GetMapping("/test")
+    // @ResponseBody()
+    // fun terminal(model: Model): String {
+    //
+    //     val config: DockerClientConfig = DefaultDockerClientConfig.createDefaultConfigBuilder()
+    //         .withApiVersion("1.41")
+    //         .build()
+    //
+    //     println(config.dockerHost.toString())
+    //
+    //     val httpClient: DockerHttpClient = ApacheDockerHttpClient.Builder()
+    //         .dockerHost(config.dockerHost)
+    //         .sslConfig(config.sslConfig)
+    //         .maxConnections(100)
+    //         .connectionTimeout(Duration.ofSeconds(30))
+    //         .responseTimeout(Duration.ofSeconds(45))
+    //         .build()
+    //
+    //     println(httpClient.toString())
+    //
+    //     val dockerClient = DockerClientImpl.getInstance(config, httpClient)
+    //
+    //     val containers = dockerClient.listContainersCmd()
+    //         .withStatusFilter(mutableListOf("running")).exec().firstOrNull()?.id
+    //     println(containers)
+    //
+    //
+    //     val result = html {
+    //         head {
+    //             title { +"xTerm + Docker test" }
+    //         }
+    //         body {
+    //             h1 { +"xTerm + Docker test" }
+    //             p {
+    //                 +"Dies ist eine Testumgebung"
+    //             }
+    //
+    //             a(href = "http://kotlinlang.org") { +"Kotlin" }
+    //
+    //             // mixed content
+    //             p {
+    //                 +"This is some"
+    //                 b { +"mixed" }
+    //                 +"text. For more see the"
+    //                 a(href = "http://kotlinlang.org") {
+    //                     +"Kotlin"
+    //                 }
+    //                 +"project"
+    //             }
+    //             p {
+    //                 ul {
+    //                     for (i in 1..5)
+    //                         li { +"${i}*2 = ${i * 2}" }
+    //                 }
+    //             }
+    //         }
+    //     }
+    //
+    //     return result.toString()
+    // }
 }

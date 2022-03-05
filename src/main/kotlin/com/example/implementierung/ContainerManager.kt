@@ -35,10 +35,6 @@ fun createContainer(image: String, name: String): String {
         .withName(name)
         .withTty(true)
         .withStdinOpen(true)
-        /*.withHostConfig(HostConfig.newHostConfig()
-            .withNetworkMode("host"))
-
-         */
         .exec()
     dockerClient.startContainerCmd(name).exec()
     println(result)
@@ -55,9 +51,11 @@ fun attachToContainer(id: String, currentSession: WebSocketSession) {
         .withStdErr(true)
         .withFollowStream(true)
         .exec(object : ResultCallback.Adapter<Frame>() {
-            override fun onNext(frame: Frame?) {
-                requireNotNull(frame)
+            override fun onNext(frame: Frame) {
+                // requireNotNull(frame)
+                // println("Container Output " + System.currentTimeMillis())
                 currentSession.sendMessage(TextMessage(frame.payload))
+                // println("Output sent      " + System.currentTimeMillis())
             }
         })
 }

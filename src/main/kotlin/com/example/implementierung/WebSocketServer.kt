@@ -35,7 +35,9 @@ class MyWebSocketHandler : TextWebSocketHandler() {
     var fromContainer = PipedInputStream()
 
     override fun handleTextMessage(session: WebSocketSession, message: TextMessage) {
+        // println("Container Input  " + System.currentTimeMillis())
         (session.attributes["pipe"] as PipedOutputStream).write(message.payload.toByteArray())
+        // println("Input sent       " + System.currentTimeMillis())
     }
 
     override fun handleTransportError(session: WebSocketSession, exception: Throwable) {
