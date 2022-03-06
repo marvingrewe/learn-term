@@ -1,20 +1,13 @@
-package com.example.implementierung
+package com.example.learnterm
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Configuration
-import org.springframework.http.server.ServerHttpRequest
-import org.springframework.http.server.ServerHttpResponse
-import org.springframework.security.core.Authentication
-import org.springframework.security.core.context.SecurityContextHolder
-import org.springframework.security.oauth2.core.user.DefaultOAuth2User
-import org.springframework.security.oauth2.core.user.OAuth2User
 import org.springframework.stereotype.Component
 import org.springframework.web.socket.*
 import org.springframework.web.socket.config.annotation.EnableWebSocket
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 import org.springframework.web.socket.handler.TextWebSocketHandler
-import org.springframework.web.socket.server.HandshakeInterceptor
 import java.io.*
 
 
@@ -31,8 +24,8 @@ class WebSocketServerConfiguration(@Autowired private val wsHandler: MyWebSocket
 
 @Component
 class MyWebSocketHandler : TextWebSocketHandler() {
-    var toContainer = PipedOutputStream()
-    var fromContainer = PipedInputStream()
+    // var toContainer = PipedOutputStream()
+    // var fromContainer = PipedInputStream()
 
     override fun handleTextMessage(session: WebSocketSession, message: TextMessage) {
         // println("Container Input  " + System.currentTimeMillis())
@@ -47,29 +40,29 @@ class MyWebSocketHandler : TextWebSocketHandler() {
     // TODO: this
     override fun afterConnectionEstablished(session: WebSocketSession) {
         // check(session.principal is OAuth2User)
-        println("session class: ${session::class.java}")
-        println("session principal class: ${session.principal!!::class.java}")
-        println("connection established")
-        println("session principal: ${session.principal}")
-        println("session id: ${session.id}")
-        println("principal name at websocket: ${session.principal?.name ?: "no name"}")
-        println("hallo! hihihahahohoho")
+        // println("session class: ${session::class.java}") // StandardWebSocketSession
+        // println("session principal class: ${session.principal!!::class.java}")   // OAuth2AuthenticationToken
+        // println("connection established")
+        // println("session principal: ${session.principal}")   // OAuth2AuthenticationToken, alle Informationen
+        // println("session id: ${session.id}") // e.g. 48883f1a-f783-3335-b79f-39d93794f4e7
+        // println("principal name at websocket: ${session.principal?.name ?: "no name"}")  // e.g. 88387746
         // val authentication: Authentication = SecurityContextHolder.getContext().authentication
         // val currentPrincipalName: String = authentication.name
         // println("principal name: $currentPrincipalName")
-        toContainer = PipedOutputStream()
+        val toContainer = PipedOutputStream()
         val currentSession = session to toContainer
         session.attributes["pipe"] = toContainer
         // println(session.attributes.keys)
-        attachToContainer(containerMap[session.principal?.name]!!, session)
+        containerMap[session.principal?.name]?.let { attachToContainer(it, session) }
     }
 
     // TODO: this
     override fun afterConnectionClosed(session: WebSocketSession, status: CloseStatus) {
         val containerName = containerMap[session.principal?.name]!!
+        (session.attributes["pipe"] as PipedOutputStream).close()
         stopContainer(containerName)
         containerMap.remove(session.principal?.name)
-        removeContainer(containerName)
+        // removeContainer(containerName)
         println("connection closed with status $status")
     }
 }

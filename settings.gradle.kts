@@ -1,1 +1,1 @@
-rootProject.name = "Implementierung"
+rootProject.name = "LearnTerm"

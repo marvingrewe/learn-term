@@ -1,19 +1,11 @@
-package com.example.implementierung
+package com.example.learnterm
 
-import com.github.dockerjava.core.DefaultDockerClientConfig
-import com.github.dockerjava.core.DockerClientConfig
-import com.github.dockerjava.core.DockerClientImpl
-import com.github.dockerjava.httpclient5.ApacheDockerHttpClient
-import com.github.dockerjava.transport.DockerHttpClient
-import org.springframework.boot.web.servlet.server.Session
 import org.springframework.security.core.Authentication
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.ui.set
 import org.springframework.web.bind.annotation.*
-import java.security.Principal
-import java.time.Duration
 
 
 @Controller
@@ -35,9 +27,9 @@ class HtmlController(val dbManager: DBManager) {
     fun blog(model: Model, authentication: Authentication, @PathVariable levelName: String): String {
         check(authentication is OAuth2AuthenticationToken) { "authentication is not OAuth2AuthenticationToken" }
         val attributes = authentication.principal.attributes
-        println("authentication name: ${authentication.name}")
-        println(authentication)
-        println("authentication principal: ${authentication.principal::class.java}")
+        // println("authentication name: ${authentication.name}")   // e.g. 88387746
+        // println(authentication)  // OAuth2AuthenticationToken, alle Informationen
+        // println("authentication principal: ${authentication.principal::class.java}") // DefaultOAuth2User
         model["title"] = levelName
         val userName = attributes["name"].toString()
         model["user"] = userName
@@ -46,11 +38,9 @@ class HtmlController(val dbManager: DBManager) {
 
         val containerName = levelName + attributes["login"]
         containerMap[authentication.name] = containerName
-        println(levels)
-        // TODO: user management
-        //
+        // println(levels)
 
-        // TODO: validate levelID
+        // TODO: maybe validate levelID
         val containerID = createContainer(levelName, containerName)
         var user = dbManager.getUserByAccountName(accountName)
         if (user == null) {
@@ -76,20 +66,20 @@ class HtmlController(val dbManager: DBManager) {
         return "verified container $containerID\n"
     }
 
-    @RequestMapping("/verifytest")
-    @ResponseBody
-    fun verifyTest(session: Session): String? {
-        println(session.toString())
-        println(session::class.java)
-        println("I'm verifying!")
-        return "this page is for testing purposes only\n"
-    }
-
-    @RequestMapping(value = ["/username"], method = [RequestMethod.GET])
-    @ResponseBody
-    fun currentUserName(principal: Principal): String? {
-        return principal.name
-    }
+    // @RequestMapping("/verifytest")
+    // @ResponseBody
+    // fun verifyTest(session: Session): String? {
+    //     println(session.toString())
+    //     println(session::class.java)
+    //     println("I'm verifying!")
+    //     return "this page is for testing purposes only\n"
+    // }
+    //
+    // @RequestMapping(value = ["/username"], method = [RequestMethod.GET])
+    // @ResponseBody
+    // fun currentUserName(principal: Principal): String? {
+    //     return principal.name
+    // }
 
     // @GetMapping("/secret")
     // fun secret() {

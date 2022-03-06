@@ -1,4 +1,4 @@
-package com.example.implementierung
+package com.example.learnterm
 
 import org.hibernate.Hibernate
 import javax.persistence.*

@@ -1,9 +1,7 @@
-package com.example.implementierung
+package com.example.learnterm
 
-import org.springframework.boot.web.servlet.server.Session
 import org.springframework.stereotype.Controller
 import org.springframework.transaction.annotation.Transactional
-import org.springframework.web.bind.annotation.*
 
 lateinit var levels : List<Level>
 

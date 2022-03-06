@@ -1,4 +1,4 @@
-package com.example.implementierung
+package com.example.learnterm
 
 import org.springframework.data.jpa.repository.JpaRepository
 

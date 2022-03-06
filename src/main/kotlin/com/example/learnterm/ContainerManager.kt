@@ -1,10 +1,8 @@
-package com.example.implementierung
+package com.example.learnterm
 
 import com.github.dockerjava.api.DockerClient
 import com.github.dockerjava.api.async.ResultCallback
 import com.github.dockerjava.api.model.Frame
-import com.github.dockerjava.api.model.HostConfig
-import com.github.dockerjava.api.model.SecretSpec
 import com.github.dockerjava.core.DefaultDockerClientConfig
 import com.github.dockerjava.core.DockerClientConfig
 import com.github.dockerjava.core.DockerClientImpl
@@ -63,29 +61,31 @@ fun attachToContainer(id: String, currentSession: WebSocketSession) {
 fun stopContainer(id: String) {
     dockerClient.stopContainerCmd(id)
         .exec()
-}
-
-fun removeContainer(id: String) {
     dockerClient.removeContainerCmd(id)
         .exec()
 }
 
-fun createSecret() {
-    val secretSpec = SecretSpec()
-    println(secretSpec)
-    dockerClient.createSecretCmd(secretSpec)
-        .exec()
-}
-
-fun containerDiff(id: String): String {
-    val changeLog = dockerClient.containerDiffCmd(id).exec()
-    return changeLog.toString()
-}
-
-fun containerArchive(id: String): String {
-    val archive = dockerClient.inspectContainerCmd(id).exec()
-    return archive.path
-}
+// fun removeContainer(id: String) {
+//     dockerClient.removeContainerCmd(id)
+//         .exec()
+// }
+//
+// fun createSecret() {
+//     val secretSpec = SecretSpec()
+//     println(secretSpec)
+//     dockerClient.createSecretCmd(secretSpec)
+//         .exec()
+// }
+//
+// fun containerDiff(id: String): String {
+//     val changeLog = dockerClient.containerDiffCmd(id).exec()
+//     return changeLog.toString()
+// }
+//
+// fun containerArchive(id: String): String {
+//     val archive = dockerClient.inspectContainerCmd(id).exec()
+//     return archive.path
+// }
 
 
 // fun start(): ResultCallback.Adapter<PushResponseItem?>? {

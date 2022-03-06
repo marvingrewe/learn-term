@@ -1,8 +1,4 @@
-package com.example.implementierung
-
-import org.springframework.boot.ApplicationArguments
-import org.springframework.boot.ApplicationRunner
-import org.springframework.stereotype.Component
+package com.example.learnterm
 
 // @Component
 // class StartupRunner(val levelRepository: LevelRepository) : ApplicationRunner {

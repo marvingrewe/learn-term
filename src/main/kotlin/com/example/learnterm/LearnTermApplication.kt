@@ -1,14 +1,13 @@
-package com.example.implementierung
+package com.example.learnterm
 
-import org.springframework.boot.Banner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
-class ImplementierungApplication
+class LearnTermApplication
 
 fun main(args: Array<String>) {
-    runApplication<ImplementierungApplication>(*args) {
+    runApplication<LearnTermApplication>(*args) {
         // setBannerMode(Banner.Mode.OFF)
     }
 }

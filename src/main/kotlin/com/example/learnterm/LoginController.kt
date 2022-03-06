@@ -1,4 +1,4 @@
-package com.example.implementierung
+package com.example.learnterm
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.ResolvableType
