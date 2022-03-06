@@ -30,9 +30,11 @@ class HtmlController(val dbManager: DBManager) {
         // println("authentication name: ${authentication.name}")   // e.g. 88387746
         // println(authentication)  // OAuth2AuthenticationToken, alle Informationen
         // println("authentication principal: ${authentication.principal::class.java}") // DefaultOAuth2User
-        model["title"] = levelName
+        // model["title"] = levelName
+        model.addAttribute("title", levelName)
         val userName = attributes["name"].toString()
-        model["user"] = userName
+        // model["user"] = userName
+        model.addAttribute("user", userName)
 
         val accountName = attributes["login"].toString()
 
@@ -49,7 +51,7 @@ class HtmlController(val dbManager: DBManager) {
         val level = dbManager.getLevelByName(levelName)
         containerIDMap[containerID] = user to level
 
-        return "blog"
+        return "terminal"
     }
 
     @PostMapping("/verify")
