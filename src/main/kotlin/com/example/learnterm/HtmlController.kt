@@ -57,11 +57,7 @@ class HtmlController(val dbManager: DBManager) {
     @PostMapping("/verify")
     @ResponseBody
     fun verify(@RequestBody hostName: String): String? {
-        val containerID = if (hostName.last() == '=') {
-            hostName.dropLast(1)
-        } else {
-            hostName
-        }
+        val containerID = hostName.take(12)
         // println(containerID)
         val (user, level) = containerIDMap[containerID]!!
         dbManager.markCompletedLevel(user, level)
