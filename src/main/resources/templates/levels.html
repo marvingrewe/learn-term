@@ -5,6 +5,7 @@
     <title>Levels</title>
 </head>
 <body>
+<h2 th:text="'Eingeloggt als ' + ${user}" ></h2>
 <h3>Choose a level:</h3>
 <p th:each="level : ${levels}">
     <a th:text="${level.value}" th:href="@{/levels/{path}(path=${level.value})}">Client</a>

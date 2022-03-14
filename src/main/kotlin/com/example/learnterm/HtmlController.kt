@@ -17,7 +17,10 @@ class HtmlController(val dbManager: DBManager) {
     }
 
     @GetMapping("/levels")
-    fun getLevels(model: Model): String {
+    fun getLevels(model: Model, authentication: Authentication): String {
+        check(authentication is OAuth2AuthenticationToken) { "authentication is not OAuth2AuthenticationToken" }
+        val attributes = authentication.principal.attributes
+        model.addAttribute("user", attributes["name"].toString())
         val levelMap = dbManager.getAllLevels().associate { it.levelID.toString() to it.name }
         model.addAttribute("levels", levelMap)
         return "levels"
