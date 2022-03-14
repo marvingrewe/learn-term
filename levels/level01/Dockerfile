@@ -14,4 +14,5 @@ ENV WORKDIR=/app
 USER user
 RUN git config --global user.email "test@test.com"
 RUN git config --global user.name "Test Testington"
+RUN git config --global init.defaultBranch master
 CMD ["/bin/bash"]

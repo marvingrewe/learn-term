@@ -1,5 +1,5 @@
 #!/bin/bash
 echo -e "Willkommen zu Level 01!"
-echo -e "Dieses Level ist zu Testzwecken automatisch bestanden."
+echo -e "Um dieses Level zu bestehen, musst du ein neues git-Repository anlegen und\neinen Commit in diesem Repository erstellen."
 echo -e "Prüfe den erfolgreichen Abschluss mit dem Befehl 'verify'."
 echo -e "Um diesen Hinweis erneut zu sehen, nutze den Befehl 'showtask'."
