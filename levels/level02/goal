@@ -1,2 +1,10 @@
 #!/bin/bash
-exit 0
+branchName=$(git branch --show-current)
+commitCount=$(git log --oneline | wc -l)
+if [ "$branchName" = "master" ]; then
+  exit 1
+elif [ "$commitCount" -ge 1 ]; then
+  exit 0
+else
+  exit 1
+fi;

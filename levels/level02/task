@@ -1,6 +1,5 @@
 #!/bin/bash
 echo -e "Willkommen zu Level 02!"
-echo -e "Dieses Level ist zu Testzwecken automatisch bestanden."
+echo -e "Um dieses Level zu bestehen, musst du im git-Repository in home/user \neinen neuen Branch mit einem Commit erstellen."
 echo -e "Prüfe den erfolgreichen Abschluss mit dem Befehl 'verify'."
 echo -e "Um diesen Hinweis erneut zu sehen, nutze den Befehl 'showtask'."
-

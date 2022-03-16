@@ -35,9 +35,9 @@ class HtmlController(val dbManager: DBManager) {
         // println("authentication principal: ${authentication.principal::class.java}") // DefaultOAuth2User
         // model["title"] = levelName
         model.addAttribute("title", levelName)
-        val userName = attributes["name"].toString()
+        // val userName = attributes["name"].toString()
         // model["user"] = userName
-        model.addAttribute("user", userName)
+        // model.addAttribute("user", userName)
 
         val accountName = attributes["login"].toString()
 
