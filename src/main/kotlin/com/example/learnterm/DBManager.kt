@@ -12,10 +12,10 @@ class DBManager(val userRepository: UserRepository, val levelRepository: LevelRe
 
     @Transactional
     fun markCompletedLevel(user: User, level: Level) {
-        /*user.completedLevels.add(level)
+        user.completedLevels.add(level)
         userRepository.save(user)
 
-         */
+
         println("completed level $level as user $user")
     }
 

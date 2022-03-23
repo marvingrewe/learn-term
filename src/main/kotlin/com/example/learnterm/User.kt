@@ -15,8 +15,12 @@ data class User(
     @GeneratedValue
     val userID: Int = 0
 
-    @ManyToMany
+    @JoinTable(name = "users_completedLevels",
+    joinColumns = [JoinColumn(name = "completedBy_userID", referencedColumnName = "userID")],
+    inverseJoinColumns = [JoinColumn(name = "completedLevels_id", referencedColumnName = "id")])
+    @ManyToMany(fetch = FetchType.EAGER)
     val completedLevels: MutableSet<Level> = mutableSetOf()
+        // private set
 
     @Override
     override fun equals(other: Any?): Boolean {
